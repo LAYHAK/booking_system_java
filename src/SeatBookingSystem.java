@@ -15,7 +15,7 @@ public class SeatBookingSystem {
     static DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
 
     static String time = localDateTime.format(dateTimeFormatter);
-    static Scanner scanner = new Scanner(System.in);
+    private static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) throws InterruptedException {
 
@@ -111,14 +111,14 @@ public class SeatBookingSystem {
                 |                                               ----- HALL C -----                                                |
                 +=================================================================================================================+
                 """);
-        displaySeats("E");
+        displaySeats(eveningShift);
         System.out.print("Enter seats to book (separated by commas): ");
         seatsToBookInput = scanner.nextLine().toUpperCase();
         seatsToBook = seatsToBookInput.split(",");
         Thread.sleep(1000);
         if (bookSeats("E", seatsToBook)) {
             System.out.println("Seats booked successfully!");
-            displaySeats("E");
+            displaySeats(eveningShift);
         }
     }
 
@@ -130,14 +130,14 @@ public class SeatBookingSystem {
                 |                                               ----- HALL B -----                                                |
                 +=================================================================================================================+
                 """);
-        displaySeats("A");
+        displaySeats(afternoonShift);
         System.out.print("Enter seats to book (separated by commas): ");
         seatsToBookInput = scanner.nextLine().toUpperCase();
         seatsToBook = seatsToBookInput.split(",");
         Thread.sleep(1000);
         if (bookSeats("A", seatsToBook)) {
             System.out.println("Seats booked successfully!");
-            displaySeats("A");
+            displaySeats(afternoonShift);
         }
     }
 
@@ -149,7 +149,7 @@ public class SeatBookingSystem {
                 |                                               ----- HALL A -----                                                |
                 +=================================================================================================================+
                 """);
-        displaySeats("M");
+        displaySeats(morningShift);
         bookingInfo();
         System.out.print("Enter seats to book: ");
         seatsToBookInput = scanner.nextLine().toUpperCase();
@@ -158,7 +158,7 @@ public class SeatBookingSystem {
         if (bookSeats("M", seatsToBook)) {
             System.out.println("Seats booked successfully!");
             //store student id with seat
-            displaySeats("M");
+            displaySeats(morningShift);
         }
     }
 
@@ -210,20 +210,20 @@ public class SeatBookingSystem {
                 |                                               ----- Morning Hall -----                                          |
                 +=================================================================================================================+
                 """);
-        displaySeats("M");
+        displaySeats(morningShift);
         System.out.println("""
                 +=================================================================================================================+
                 |                                               ----- Afternoon Hall -----                                        |
                 +=================================================================================================================+
                 """);
 
-        displaySeats("A");
+        displaySeats(afternoonShift);
         System.out.println("""
                 +=================================================================================================================+
                 |                                               ----- Evening Hall -----                                          |
                 +=================================================================================================================+
                 """);
-        displaySeats("E");
+        displaySeats(eveningShift);
         Thread.sleep(1000);
     }
 
@@ -292,12 +292,7 @@ public class SeatBookingSystem {
         return seats;
     }
 
-    private static void displaySeats(String shift) {
-        String[][] seats = switch (shift) {
-            case "M" -> morningShift;
-            case "A" -> afternoonShift;
-            default -> eveningShift;
-        };
+    private static void displaySeats(String[][] seats) {
         for (String[] row : seats) {
             for (String seat : row) {
                 System.out.print(seat + "\t");
