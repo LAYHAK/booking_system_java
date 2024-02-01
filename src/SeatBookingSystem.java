@@ -1,5 +1,6 @@
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class SeatBookingSystem {
@@ -164,6 +165,9 @@ public class SeatBookingSystem {
     private static void showHistory() throws InterruptedException {
         System.out.println("Booking History");
         int i = 0;
+        if (bookingHistory[0] == null) {
+            System.out.println("No booking history yet!");
+        }
         for (String s : bookingHistory) {
             if (s != null) {
                 System.out.print("Booking " + ++i + ":");
@@ -186,12 +190,17 @@ public class SeatBookingSystem {
     private static void rebootSeat() throws InterruptedException {
         System.out.println("Rebooting Hall");
         reboot();
+        rebootHistory();
         Thread.sleep(1000);
         System.out.println("""
                 +=================================================================================================================+
                 |                                           ----- Reboot Successful -----                                         |
                 +=================================================================================================================+
                 """);
+    }
+
+    private static void rebootHistory() {
+        Arrays.fill(bookingHistory, null);
     }
 
     private static void checkHistory() throws InterruptedException {
