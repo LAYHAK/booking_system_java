@@ -46,156 +46,176 @@ public class SeatBookingSystem {
             opt = scanner.nextLine().toUpperCase();
             while (!opt.matches("[A-F]+") || opt.length() > 1) {
                 System.out.println("Invalid input. Please try again");
+                System.out.print("Your Option:");
                 opt = scanner.nextLine().toUpperCase();
             }
             switch (opt) {
                 case "A" -> {
-                    System.out.println("Start Booking Seat");
-                    showTime();
-                    System.out.print("Your Option:");
-                    opt = scanner.nextLine().toUpperCase();
-                    String seatsToBookInput;
-                    String[] seatsToBook;
-                    //validate input opt only allow A,B,C and only allow to input only one character
-                    while (!opt.matches("[A-C]+") || opt.length() > 1) {
-                        System.out.println("Invalid input. Please try again");
-                        opt = scanner.nextLine().toUpperCase();
-                    }
+                    opt = chooseBookingOption();
                     switch (opt) {
                         case "A" -> {
-                            System.out.println("""
-                                    +=================================================================================================================+
-                                    |                                               ----- HALL A -----                                                |
-                                    +=================================================================================================================+
-                                    """);
-                            displaySeats("M");
-                            bookingInfo();
-                            System.out.print("Enter seats to book: ");
-                            seatsToBookInput = scanner.nextLine().toUpperCase();
-                            seatsToBook = seatsToBookInput.split(",");
-                            Thread.sleep(1000);
-                            if (bookSeats("M", seatsToBook)) {
-
-                                System.out.println("Seats booked successfully!");
-                                //store student id with seat
-
-                                displaySeats("M");
-                                for (String s : bookingHistory) {
-                                    if (s != null)
-                                        System.out.println(s);
-                                }
-                            }
+                            showHallA();
                         }
                         case "B" -> {
-                            System.out.println("""
-                                    +=================================================================================================================+
-                                    |                                               ----- HALL B -----                                                |
-                                    +=================================================================================================================+
-                                    """);
-                            displaySeats("A");
-                            System.out.print("Enter seats to book (separated by commas): ");
-                            seatsToBookInput = scanner.nextLine().toUpperCase();
-                            seatsToBook = seatsToBookInput.split(",");
-                            Thread.sleep(1000);
-                            if (bookSeats("A", seatsToBook)) {
-                                System.out.println("Seats booked successfully!");
-                                displaySeats("A");
-                            }
+                            showHallB();
                         }
                         default -> {
-                            System.out.println("""
-                                    +=================================================================================================================+
-                                    |                                               ----- HALL C -----                                                |
-                                    +=================================================================================================================+
-                                    """);
-                            displaySeats("E");
-                            seatsToBookInput = scanner.nextLine().toUpperCase();
-                            seatsToBook = seatsToBookInput.split(",");
-                            Thread.sleep(1000);
-                            if (bookSeats("E", seatsToBook)) {
-                                System.out.println("Seats booked successfully!");
-                                displaySeats("E");
-                            }
+                            showHallC();
                         }
                     }
 
                 }
                 case "B" -> {
-                    System.out.println("This is for display hall checking");
-                    System.out.println("""
-                            +=================================================================================================================+
-                            |                                               ----- Morning Hall -----                                          |
-                            +=================================================================================================================+
-                            """);
-                    displaySeats("M");
-                    System.out.println("""
-                            +=================================================================================================================+
-                            |                                               ----- Afternoon Hall -----                                        |
-                            +=================================================================================================================+
-                            """);
-
-                    displaySeats("A");
-                    System.out.println("""
-                            +=================================================================================================================+
-                            |                                               ----- Evening Hall -----                                          |
-                            +=================================================================================================================+
-                            """);
-                    displaySeats("E");
-                    Thread.sleep(1000);
+                    checkHistory();
                 }
 
                 case "C" -> {
                     showTime();
                     //sleep 1 second
-                    Thread.sleep(1000);
                 }
                 case "D" -> {
-                    System.out.println("Booking History");
-                    int i = 0;
-                    for (String s : bookingHistory) {
-                        if (s != null) {
-                            System.out.print("Booking " + ++i + ":");
-                            System.out.println(s);
-                        }
-                    }
-                    Thread.sleep(1000);
+                    showHistory();
                 }
                 case "E" -> {
-                    System.out.println("Rebooting Hall");
-                    reboot();
-                    Thread.sleep(1000);
-                    System.out.println("""
-                            +=================================================================================================================+
-                            |                                           ----- Reboot Successful -----                                         |
-                            +=================================================================================================================+
-                            """);
-
+                    rebootSeat();
                 }
                 default -> {
-                    System.out.println("Thank you for using the Hall Booking System. Goodbye!");
-                    System.exit(0);
+                    goodbye();
                 }
             }
         } while (!opt.equals("F"));
+    }
 
+    private static String chooseBookingOption() throws InterruptedException {
+        String opt;
+        System.out.println("Start Booking Seat");
+        showTime();
+        System.out.print("Your Option:");
+        opt = scanner.nextLine().toUpperCase();
+        String seatsToBookInput;
+        String[] seatsToBook;
+        //validate input opt only allow A,B,C and only allow to input only one character
+        while (!opt.matches("[A-C]+") || opt.length() > 1) {
+            System.out.println("Invalid input. Please try again");
+            opt = scanner.nextLine().toUpperCase();
+        }
+        return opt;
+    }
 
-//        displaySeats(morningShift);
-//        System.out.println("=====================================");
-//        displaySeats(afternoonShift);
-//        System.out.println("=====================================");
-//        displaySeats(eveningShift);
-
-
+    private static void showHallC() throws InterruptedException {
+        String[] seatsToBook;
+        String seatsToBookInput;
+        System.out.println("""
+                +=================================================================================================================+
+                |                                               ----- HALL C -----                                                |
+                +=================================================================================================================+
+                """);
+        displaySeats("E");
         System.out.print("Enter seats to book (separated by commas): ");
-        String seatsToBookInput = scanner.nextLine();
-        String[] seatsToBook = seatsToBookInput.split(",");
+        seatsToBookInput = scanner.nextLine().toUpperCase();
+        seatsToBook = seatsToBookInput.split(",");
+        Thread.sleep(1000);
+        if (bookSeats("E", seatsToBook)) {
+            System.out.println("Seats booked successfully!");
+            displaySeats("E");
+        }
+    }
 
+    private static void showHallB() throws InterruptedException {
+        String[] seatsToBook;
+        String seatsToBookInput;
+        System.out.println("""
+                +=================================================================================================================+
+                |                                               ----- HALL B -----                                                |
+                +=================================================================================================================+
+                """);
+        displaySeats("A");
+        System.out.print("Enter seats to book (separated by commas): ");
+        seatsToBookInput = scanner.nextLine().toUpperCase();
+        seatsToBook = seatsToBookInput.split(",");
+        Thread.sleep(1000);
+        if (bookSeats("A", seatsToBook)) {
+            System.out.println("Seats booked successfully!");
+            displaySeats("A");
+        }
+    }
+
+    private static void showHallA() throws InterruptedException {
+        String seatsToBookInput;
+        String[] seatsToBook;
+        System.out.println("""
+                +=================================================================================================================+
+                |                                               ----- HALL A -----                                                |
+                +=================================================================================================================+
+                """);
+        displaySeats("M");
+        bookingInfo();
+        System.out.print("Enter seats to book: ");
+        seatsToBookInput = scanner.nextLine().toUpperCase();
+        seatsToBook = seatsToBookInput.split(",");
+        Thread.sleep(1000);
         if (bookSeats("M", seatsToBook)) {
             System.out.println("Seats booked successfully!");
+            //store student id with seat
             displaySeats("M");
         }
+    }
 
-        scanner.close();
+    private static void showHistory() throws InterruptedException {
+        System.out.println("Booking History");
+        int i = 0;
+        for (String s : bookingHistory) {
+            if (s != null) {
+                System.out.print("Booking " + ++i + ":");
+                System.out.println(s);
+            }
+        }
+        Thread.sleep(1000);
+    }
+
+    private static void goodbye() {
+        System.out.println("""
+                +=================================================================================================================+
+                |                                       ----- Goodbye See you next time -----                                     |
+                +=================================================================================================================+
+                """);
+
+        System.exit(0);
+    }
+
+    private static void rebootSeat() throws InterruptedException {
+        System.out.println("Rebooting Hall");
+        reboot();
+        Thread.sleep(1000);
+        System.out.println("""
+                +=================================================================================================================+
+                |                                           ----- Reboot Successful -----                                         |
+                +=================================================================================================================+
+                """);
+    }
+
+    private static void checkHistory() throws InterruptedException {
+        System.out.println("This is for display hall checking");
+        System.out.println("""
+                +=================================================================================================================+
+                |                                               ----- Morning Hall -----                                          |
+                +=================================================================================================================+
+                """);
+        displaySeats("M");
+        System.out.println("""
+                +=================================================================================================================+
+                |                                               ----- Afternoon Hall -----                                        |
+                +=================================================================================================================+
+                """);
+
+        displaySeats("A");
+        System.out.println("""
+                +=================================================================================================================+
+                |                                               ----- Evening Hall -----                                          |
+                +=================================================================================================================+
+                """);
+        displaySeats("E");
+        Thread.sleep(1000);
     }
 
 
@@ -222,7 +242,7 @@ public class SeatBookingSystem {
                 """);
     }
 
-    private static void showTime() {
+    private static void showTime() throws InterruptedException {
         System.out.println("""
                 +=================================================================================================================+
                 |                                              ----- SHOW TIME -----                                              |
@@ -231,6 +251,7 @@ public class SeatBookingSystem {
                 |                                            C. Evening (7:00 - 8:30)                                             |                                                |
                 +=================================================================================================================+
                 """);
+        Thread.sleep(1000);
     }
 
 
