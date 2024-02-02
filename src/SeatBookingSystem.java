@@ -19,20 +19,20 @@ public class SeatBookingSystem {
 
         System.out.print("Enter the number of rows: ");
 
-        String rows = scanner.nextLine();
+        String rows = scanner.nextLine().replaceAll("\\s", "");
         //only allow to input number
         while (!rows.matches("[0-9]+") || Integer.parseInt(rows) > 26) {
             System.out.println("Invalid input. Please try again.");
             System.out.print("Enter the number of rows: ");
-            rows = scanner.nextLine();
+            rows = scanner.nextLine().replaceAll("\\s", "");
         }
 //A-1::AV A-1
         System.out.print("Enter the number of columns: ");
-        String columns = scanner.nextLine();
+        String columns = scanner.nextLine().replaceAll("\\s", "");
         while (!columns.matches("[0-9]+") || Integer.parseInt(columns) > 26) {
             System.out.println("Invalid input. Please try again.");
             System.out.print("Enter the number of columns: ");
-            columns = scanner.nextLine();
+            columns = scanner.nextLine().replaceAll("\\s", "");
         }
         morningShift = createSeatsArray(Integer.parseInt(rows), Integer.parseInt(columns));  //? Initialize the class variable
         afternoonShift = createSeatsArray(Integer.parseInt(rows), Integer.parseInt(columns));  //? Initialize the class variable
@@ -42,11 +42,11 @@ public class SeatBookingSystem {
         do {
             option();
             System.out.print("Your Option:");
-            opt = scanner.nextLine().toUpperCase();
+            opt = scanner.nextLine().toUpperCase().replaceAll("\\s", "");
             while (!opt.matches("[A-F]+") || opt.length() > 1) {
                 System.out.println("Invalid input. Please try again");
                 System.out.print("Your Option:");
-                opt = scanner.nextLine().toUpperCase();
+                opt = scanner.nextLine().toUpperCase().replaceAll("\\s", "");
             }
             switch (opt) {
                 case "A" -> {
@@ -90,13 +90,11 @@ public class SeatBookingSystem {
         System.out.println("Start Booking Seat");
         showTime();
         System.out.print("Your Option:");
-        opt = scanner.nextLine().toUpperCase();
-        String seatsToBookInput;
-        String[] seatsToBook;
+        opt = scanner.nextLine().toUpperCase().replaceAll("\\s", "");
         //validate input opt only allow A,B,C and only allow to input only one character
         while (!opt.matches("[A-C]+") || opt.length() > 1) {
             System.out.println("Invalid input. Please try again");
-            opt = scanner.nextLine().toUpperCase();
+            opt = scanner.nextLine().toUpperCase().replaceAll("\\s", "");
         }
         return opt;
     }
@@ -158,11 +156,11 @@ public class SeatBookingSystem {
     private static String[] getBookedSeat() {
         String[] seatsToBook;
         String seatsToBookInput;
-        seatsToBookInput = scanner.nextLine().toUpperCase();
+        seatsToBookInput = scanner.nextLine().toUpperCase().replaceAll("\\s", "");
         while (!seatsToBookInput.matches("([A-Z]-[0-9]+,?)+")) {
             System.out.println("Invalid input. Please try again");
             System.out.print("Enter seats to book (separated by commas): ");
-            seatsToBookInput = scanner.nextLine().toUpperCase();
+            seatsToBookInput = scanner.nextLine().toUpperCase().replaceAll("\\s", "");
         }
         seatsToBook = seatsToBookInput.split(",");
         return seatsToBook;
