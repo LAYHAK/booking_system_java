@@ -325,7 +325,7 @@ public class SeatBookingSystem {
             if (parts.length == 2) {
                 char row = parts[0].charAt(0);
                 int col = Integer.parseInt(parts[1]) - 1;
-                if (isValidSeat(row, col) && morningShift[row - 'A'][col].contains("AV") || afternoonShift[row - 'A'][col].contains("AV") || eveningShift[row - 'A'][col].contains("AV")) {
+                if (isValidSeat(row, col)) {
                     if (shift.equals("M")) {
                         if (morningShift[row - 'A'][col].contains("BO")) {
                             System.out.println("Seat " + seatCode + " is not available.");
