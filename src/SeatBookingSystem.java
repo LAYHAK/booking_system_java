@@ -94,6 +94,7 @@ public class SeatBookingSystem {
         //validate input opt only allow A,B,C and only allow to input only one character
         while (!opt.matches("[A-C]+") || opt.length() > 1) {
             System.out.println("Invalid input. Please try again");
+            System.out.print("Your Option:");
             opt = scanner.nextLine().toUpperCase().replaceAll("\\s", "");
         }
         return opt;
