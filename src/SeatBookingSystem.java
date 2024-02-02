@@ -174,17 +174,17 @@ public class SeatBookingSystem {
         if (bookingHistory[0] == null) {
             System.out.println("No booking history yet!");
         }
-        for (String s : bookingHistory) {
-            if (s != null) {
+        for (String history : bookingHistory) {
+            if (history != null) {
                 System.out.println("+====================================================+");
-                System.out.println(s);
+//                System.out.println(history);
                 System.out.println("#NO:" + ++i);
-                String seat = s.substring(s.indexOf("["), s.indexOf("]") + 1);
-                String hall = s.substring(s.indexOf("H"), s.indexOf("l") + 4);
+                String seat = history.substring(history.indexOf("["), history.indexOf("]") + 1);
+                String hall = history.substring(history.indexOf("H"), history.indexOf("l") + 4);
                 //select student id from string that have 2 space between one char and another char
-                String studentId = s.substring(s.indexOf(" ", s.indexOf("l") + 4), s.lastIndexOf(" ") - 10);
-//                String studentId = s.substring(s.indexOf(" ", s.indexOf("l") + 4), s.lastIndexOf(" ", s.indexOf(" ", )));
-                String time = s.substring(s.lastIndexOf(" ") - 11);
+                String studentId = history.substring(history.indexOf(" ", history.indexOf("l") + 4), history.lastIndexOf(" ") - 10);
+//                String studentId = history.substring(history.indexOf(" ", history.indexOf("l") + 4), history.lastIndexOf(" ", history.indexOf(" ", )));
+                String time = history.substring(history.lastIndexOf(" ") - 11);
                 System.out.println("#SEATS:" + seat);
                 System.out.println("#HALL\t" + "#STUDENT ID\t" + "#CREATED_AT");
                 System.out.println(hall + "\t" + studentId + "\t\t" + time);
