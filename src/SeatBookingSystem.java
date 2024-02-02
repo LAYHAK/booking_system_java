@@ -103,7 +103,6 @@ public class SeatBookingSystem {
 
     private static void showHallC() throws InterruptedException {
         String[] seatsToBook;
-        String seatsToBookInput;
         System.out.println("""
                 +=================================================================================================================+
                 |                                               ----- HALL C -----                                                |
@@ -111,8 +110,8 @@ public class SeatBookingSystem {
                 """);
         displaySeats(eveningShift);
         System.out.print("Enter seats to book (separated by commas): ");
-        seatsToBookInput = scanner.nextLine().toUpperCase();
-        seatsToBook = seatsToBookInput.split(",");
+
+        seatsToBook = getBookedSeat();
         Thread.sleep(1000);
         if (bookSeats("E", seatsToBook)) {
             System.out.println("Seats booked successfully!");
@@ -122,7 +121,6 @@ public class SeatBookingSystem {
 
     private static void showHallB() throws InterruptedException {
         String[] seatsToBook;
-        String seatsToBookInput;
         System.out.println("""
                 +=================================================================================================================+
                 |                                               ----- HALL B -----                                                |
@@ -130,8 +128,7 @@ public class SeatBookingSystem {
                 """);
         displaySeats(afternoonShift);
         System.out.print("Enter seats to book (separated by commas): ");
-        seatsToBookInput = scanner.nextLine().toUpperCase();
-        seatsToBook = seatsToBookInput.split(",");
+        seatsToBook = getBookedSeat();
         Thread.sleep(1000);
         if (bookSeats("A", seatsToBook)) {
             System.out.println("Seats booked successfully!");
@@ -140,7 +137,6 @@ public class SeatBookingSystem {
     }
 
     private static void showHallA() throws InterruptedException {
-        String seatsToBookInput;
         String[] seatsToBook;
         System.out.println("""
                 +=================================================================================================================+
@@ -149,15 +145,27 @@ public class SeatBookingSystem {
                 """);
         displaySeats(morningShift);
         bookingInfo();
-        System.out.print("Enter seats to book: ");
-        seatsToBookInput = scanner.nextLine().toUpperCase();
-        seatsToBook = seatsToBookInput.split(",");
+        System.out.print("Enter seats to book (separated by commas): ");
+        seatsToBook = getBookedSeat();
         Thread.sleep(1000);
         if (bookSeats("M", seatsToBook)) {
             System.out.println("Seats booked successfully!");
             //store student id with seat
             displaySeats(morningShift);
         }
+    }
+
+    private static String[] getBookedSeat() {
+        String[] seatsToBook;
+        String seatsToBookInput;
+        seatsToBookInput = scanner.nextLine().toUpperCase();
+        while (!seatsToBookInput.matches("([A-Z]-[0-9]+,?)+")) {
+            System.out.println("Invalid input. Please try again");
+            System.out.print("Enter seats to book (separated by commas): ");
+            seatsToBookInput = scanner.nextLine().toUpperCase();
+        }
+        seatsToBook = seatsToBookInput.split(",");
+        return seatsToBook;
     }
 
     private static void showHistory() throws InterruptedException {
@@ -317,7 +325,6 @@ public class SeatBookingSystem {
             if (parts.length == 2) {
                 char row = parts[0].charAt(0);
                 int col = Integer.parseInt(parts[1]) - 1;
-
                 if (isValidSeat(row, col) && morningShift[row - 'A'][col].contains("AV") || afternoonShift[row - 'A'][col].contains("AV") || eveningShift[row - 'A'][col].contains("AV")) {
                     if (shift.equals("M")) {
                         if (morningShift[row - 'A'][col].contains("BO")) {
@@ -331,7 +338,7 @@ public class SeatBookingSystem {
                             System.out.print("Enter Student ID: ");
                             studentIdInput = scanner.nextLine();
                             while (!studentIdInput.matches("\\d*")) {
-                                System.out.println("Invalid input. Please try again id must be number and length must be 3");
+                                System.out.println("Invalid input.");
                                 System.out.print("Enter Student ID: ");
                                 studentIdInput = scanner.nextLine();
                             }
@@ -365,7 +372,7 @@ public class SeatBookingSystem {
                             System.out.print("Enter Student ID: ");
                             studentIdInput = scanner.nextLine();
                             while (!studentIdInput.matches("\\d*")) {
-                                System.out.println("Invalid input. Please try again id must be number and length must be 3");
+                                System.out.println("Invalid input.");
                                 System.out.print("Enter Student ID: ");
                                 studentIdInput = scanner.nextLine();
                             }
@@ -398,7 +405,7 @@ public class SeatBookingSystem {
                             System.out.print("Enter Student ID: ");
                             studentIdInput = scanner.nextLine();
                             while (!studentIdInput.matches("\\d*")) {
-                                System.out.println("Invalid input. Please try again id must be number and length must be 3");
+                                System.out.println("Invalid input.");
                                 System.out.print("Enter Student ID: ");
                                 studentIdInput = scanner.nextLine();
                             }
