@@ -4,17 +4,15 @@ import java.util.Arrays;
 import java.util.Scanner;
 
 public class SeatBookingSystem {
+    static LocalDateTime localDateTime = LocalDateTime.now();
+    static DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+    static String time = localDateTime.format(dateTimeFormatter);
     private static String[][] morningShift;  //? Declare seats as a class variable
     private static String[][] afternoonShift;  //? Declare seats as a class variable
     private static String[][] eveningShift;  //? Declare seats as a class variable
     private static String[] bookingHistory = new String[100];  //? Declare seats as a class variable
     private static String studentIdInput;
     private static int studentId = 0;
-
-    static LocalDateTime localDateTime = LocalDateTime.now();
-    static DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
-
-    static String time = localDateTime.format(dateTimeFormatter);
     private static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) throws InterruptedException {
@@ -170,8 +168,16 @@ public class SeatBookingSystem {
         }
         for (String s : bookingHistory) {
             if (s != null) {
-                System.out.print("Booking " + ++i + ":");
-                System.out.println(s);
+                System.out.println("+====================================================+");
+                System.out.println("#NO:" + ++i);
+                String seat = s.substring(s.indexOf("["), s.indexOf("]") + 1);
+                String hall = s.substring(s.indexOf("]") + 1, s.indexOf("]") + 8);
+                String studentId = s.substring(s.indexOf("]") + 8, s.indexOf("]") + 12);
+                String time = s.substring(s.indexOf("]") + 13);
+                System.out.println("#SEATS:" + seat);
+                System.out.println("#HALL\t" + "#STUDENT ID\t" + "#CREATED_AT");
+                System.out.println(hall + "\t" + studentId + "\t\t" + time);
+                System.out.println("+====================================================+");
             }
         }
         Thread.sleep(1000);
@@ -308,8 +314,7 @@ public class SeatBookingSystem {
                 char row = parts[0].charAt(0);
                 int col = Integer.parseInt(parts[1]) - 1;
 
-                if (isValidSeat(row, col) && morningShift[row - 'A'][col].contains("AV") || afternoonShift[row - 'A'][col].contains("AV")
-                        || eveningShift[row - 'A'][col].contains("AV")) {
+                if (isValidSeat(row, col) && morningShift[row - 'A'][col].contains("AV") || afternoonShift[row - 'A'][col].contains("AV") || eveningShift[row - 'A'][col].contains("AV")) {
                     if (shift.equals("M")) {
                         if (morningShift[row - 'A'][col].contains("BO")) {
                             System.out.println("Seat " + seatCode + " is not available.");
@@ -318,8 +323,8 @@ public class SeatBookingSystem {
                         //input student id
                         System.out.print("Enter Student ID: ");
                         studentIdInput = scanner.nextLine();
-                        while (!studentIdInput.matches("[0-9]+")) {
-                            System.out.println("Invalid input. Please try again");
+                        while (!studentIdInput.matches("\\d{3}")) {
+                            System.out.println("Invalid input. Please try again id must be number and length must be 3");
                             System.out.print("Enter Student ID: ");
                             studentIdInput = scanner.nextLine();
                         }
@@ -333,7 +338,8 @@ public class SeatBookingSystem {
                         }
                         if (confirm.equals("Y")) {
                             morningShift[row - 'A'][col] = morningShift[row - 'A'][col].replace("AV", "BO");
-                            bookingHistory[studentId] = "Hall A" + studentIdInput + " " + time;
+                            bookingHistory[studentId] = Arrays.toString(seatCodes) + " Hall A " + studentIdInput + " " + time;
+
                             ++studentId;
 
                             System.out.println("Seat booked successfully!");
@@ -350,8 +356,8 @@ public class SeatBookingSystem {
                         //input student id
                         System.out.print("Enter Student ID: ");
                         studentIdInput = scanner.nextLine();
-                        while (!studentIdInput.matches("[0-9]+")) {
-                            System.out.println("Invalid input. Please try again");
+                        while (!studentIdInput.matches("\\d{3}")) {
+                            System.out.println("Invalid input. Please try again id must be number and length must be 3");
                             System.out.print("Enter Student ID: ");
                             studentIdInput = scanner.nextLine();
                         }
@@ -365,7 +371,7 @@ public class SeatBookingSystem {
                         }
                         if (confirm.equals("Y")) {
                             afternoonShift[row - 'A'][col] = afternoonShift[row - 'A'][col].replace("AV", "BO");
-                            bookingHistory[studentId] = "Hall B" + studentIdInput + " " + time;
+                            bookingHistory[studentId] = Arrays.toString(seatCodes) + " Hall B " + studentIdInput + " " + time;
                             ++studentId;
 
                             System.out.println("Seat booked successfully!");
@@ -381,11 +387,18 @@ public class SeatBookingSystem {
                         //input student id
                         System.out.print("Enter Student ID: ");
                         studentIdInput = scanner.nextLine();
-                        while (!studentIdInput.matches("[0-9]+")) {
-                            System.out.println("Invalid input. Please try again");
+                        //id must be number and length must be 3
+                        while (!studentIdInput.matches("\\d{3}")) {
+                            System.out.println("Invalid input. Please try again id must be number and length must be 3");
                             System.out.print("Enter Student ID: ");
                             studentIdInput = scanner.nextLine();
                         }
+
+//                        while (!studentIdInput.matches("[0-9]+")) {
+//                            System.out.println("Invalid input. Please try again");
+//                            System.out.print("Enter Student ID: ");
+//                            studentIdInput = scanner.nextLine();
+//                        }
                         //if already asked once, no need to ask again
                         System.out.println("Are you sure you want to book this seat? (Y/N)");
                         String confirm = scanner.nextLine().toUpperCase();
@@ -396,7 +409,7 @@ public class SeatBookingSystem {
                         }
                         if (confirm.equals("Y")) {
                             eveningShift[row - 'A'][col] = eveningShift[row - 'A'][col].replace("AV", "BO");
-                            bookingHistory[studentId] = "Hall C" + studentIdInput + " " + time;
+                            bookingHistory[studentId] = Arrays.toString(seatCodes) + " Hall C " + studentIdInput + " " + time;
                             ++studentId;
                             System.out.println("Seat booked successfully!");
                         } else {
