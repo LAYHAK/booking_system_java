@@ -169,11 +169,14 @@ public class SeatBookingSystem {
         for (String s : bookingHistory) {
             if (s != null) {
                 System.out.println("+====================================================+");
+                System.out.println(s);
                 System.out.println("#NO:" + ++i);
                 String seat = s.substring(s.indexOf("["), s.indexOf("]") + 1);
-                String hall = s.substring(s.indexOf("]") + 1, s.indexOf("]") + 8);
-                String studentId = s.substring(s.indexOf("]") + 8, s.indexOf("]") + 12);
-                String time = s.substring(s.indexOf("]") + 13);
+                String hall = s.substring(s.indexOf("H"), s.indexOf("l") + 4);
+                //select student id from string that have 2 space between one char and another char
+                String studentId = s.substring(s.indexOf(" ", s.indexOf("l") + 4), s.lastIndexOf(" ") - 10);
+//                String studentId = s.substring(s.indexOf(" ", s.indexOf("l") + 4), s.lastIndexOf(" ", s.indexOf(" ", )));
+                String time = s.substring(s.lastIndexOf(" ") - 11);
                 System.out.println("#SEATS:" + seat);
                 System.out.println("#HALL\t" + "#STUDENT ID\t" + "#CREATED_AT");
                 System.out.println(hall + "\t" + studentId + "\t\t" + time);
@@ -308,6 +311,7 @@ public class SeatBookingSystem {
     }
 
     private static boolean bookSeats(String shift, String[] seatCodes) {
+        boolean confirmationAsked = false;
         for (String seatCode : seatCodes) {
             String[] parts = seatCode.split("-");
             if (parts.length == 2) {
@@ -321,102 +325,102 @@ public class SeatBookingSystem {
                             return false;
                         }
                         //input student id
-                        System.out.print("Enter Student ID: ");
-                        studentIdInput = scanner.nextLine();
-                        while (!studentIdInput.matches("\\d{3}")) {
-                            System.out.println("Invalid input. Please try again id must be number and length must be 3");
+
+                        //if already asked once, no need to ask again
+                        if (!confirmationAsked) {
                             System.out.print("Enter Student ID: ");
                             studentIdInput = scanner.nextLine();
-                        }
-                        //if already asked once, no need to ask again
-                        System.out.println("Are you sure you want to book this seat? (Y/N)");
-                        String confirm = scanner.nextLine().toUpperCase();
-                        while (!confirm.matches("^[YNyn]$") || confirm.length() > 1) {
-                            System.out.println("Invalid input. Please try again");
+                            while (!studentIdInput.matches("\\d*")) {
+                                System.out.println("Invalid input. Please try again id must be number and length must be 3");
+                                System.out.print("Enter Student ID: ");
+                                studentIdInput = scanner.nextLine();
+                            }
                             System.out.println("Are you sure you want to book this seat? (Y/N)");
-                            confirm = scanner.nextLine().toUpperCase();
-                        }
-                        if (confirm.equals("Y")) {
-                            morningShift[row - 'A'][col] = morningShift[row - 'A'][col].replace("AV", "BO");
+                            String confirm = scanner.nextLine().toUpperCase();
+                            while (!confirm.matches("^[YNyn]$") || confirm.length() > 1) {
+                                System.out.println("Invalid input. Please try again");
+                                System.out.println("Are you sure you want to book this seat? (Y/N)");
+                                confirm = scanner.nextLine().toUpperCase();
+                            }
+                            confirmationAsked = true;
                             bookingHistory[studentId] = Arrays.toString(seatCodes) + " Hall A " + studentIdInput + " " + time;
 
                             ++studentId;
 
-                            System.out.println("Seat booked successfully!");
-                        } else {
-                            System.out.println("Seat booking cancelled.");
-                            return false;
+                            if (!confirm.equals("Y")) {
+                                System.out.println("Seat booking cancelled.");
+                                return false;
+                            }
+
                         }
+                        morningShift[row - 'A'][col] = morningShift[row - 'A'][col].replace("AV", "BO");
+
 
                     } else if (shift.equals("A")) {
                         if (afternoonShift[row - 'A'][col].contains("BO")) {
                             System.out.println("Seat " + seatCode + " is not available.");
                             return false;
                         }
-                        //input student id
-                        System.out.print("Enter Student ID: ");
-                        studentIdInput = scanner.nextLine();
-                        while (!studentIdInput.matches("\\d{3}")) {
-                            System.out.println("Invalid input. Please try again id must be number and length must be 3");
+                        if (!confirmationAsked) {
                             System.out.print("Enter Student ID: ");
                             studentIdInput = scanner.nextLine();
-                        }
-                        //if already asked once, no need to ask again
-                        System.out.println("Are you sure you want to book this seat? (Y/N)");
-                        String confirm = scanner.nextLine().toUpperCase();
-                        while (!confirm.matches("^[YNyn]$") || confirm.length() > 1) {
-                            System.out.println("Invalid input. Please try again");
+                            while (!studentIdInput.matches("\\d*")) {
+                                System.out.println("Invalid input. Please try again id must be number and length must be 3");
+                                System.out.print("Enter Student ID: ");
+                                studentIdInput = scanner.nextLine();
+                            }
                             System.out.println("Are you sure you want to book this seat? (Y/N)");
-                            confirm = scanner.nextLine().toUpperCase();
-                        }
-                        if (confirm.equals("Y")) {
-                            afternoonShift[row - 'A'][col] = afternoonShift[row - 'A'][col].replace("AV", "BO");
+                            String confirm = scanner.nextLine().toUpperCase();
+                            while (!confirm.matches("^[YNyn]$") || confirm.length() > 1) {
+                                System.out.println("Invalid input. Please try again");
+                                System.out.println("Are you sure you want to book this seat? (Y/N)");
+                                confirm = scanner.nextLine().toUpperCase();
+                            }
+                            confirmationAsked = true;
                             bookingHistory[studentId] = Arrays.toString(seatCodes) + " Hall B " + studentIdInput + " " + time;
+
                             ++studentId;
 
-                            System.out.println("Seat booked successfully!");
-                        } else {
-                            System.out.println("Seat booking cancelled.");
-                            return false;
+                            if (!confirm.equals("Y")) {
+                                System.out.println("Seat booking cancelled.");
+                                return false;
+                            }
+
                         }
+                        afternoonShift[row - 'A'][col] = afternoonShift[row - 'A'][col].replace("AV", "BO");
                     } else {
                         if (eveningShift[row - 'A'][col].contains("BO")) {
                             System.out.println("Seat " + seatCode + " is not available.");
                             return false;
                         }
                         //input student id
-                        System.out.print("Enter Student ID: ");
-                        studentIdInput = scanner.nextLine();
-                        //id must be number and length must be 3
-                        while (!studentIdInput.matches("\\d{3}")) {
-                            System.out.println("Invalid input. Please try again id must be number and length must be 3");
+                        if (!confirmationAsked) {
                             System.out.print("Enter Student ID: ");
                             studentIdInput = scanner.nextLine();
-                        }
-
-//                        while (!studentIdInput.matches("[0-9]+")) {
-//                            System.out.println("Invalid input. Please try again");
-//                            System.out.print("Enter Student ID: ");
-//                            studentIdInput = scanner.nextLine();
-//                        }
-                        //if already asked once, no need to ask again
-                        System.out.println("Are you sure you want to book this seat? (Y/N)");
-                        String confirm = scanner.nextLine().toUpperCase();
-                        while (!confirm.matches("^[YNyn]$") || confirm.length() > 1) {
-                            System.out.println("Invalid input. Please try again");
+                            while (!studentIdInput.matches("\\d*")) {
+                                System.out.println("Invalid input. Please try again id must be number and length must be 3");
+                                System.out.print("Enter Student ID: ");
+                                studentIdInput = scanner.nextLine();
+                            }
                             System.out.println("Are you sure you want to book this seat? (Y/N)");
-                            confirm = scanner.nextLine().toUpperCase();
-                        }
-                        if (confirm.equals("Y")) {
-                            eveningShift[row - 'A'][col] = eveningShift[row - 'A'][col].replace("AV", "BO");
+                            String confirm = scanner.nextLine().toUpperCase();
+                            while (!confirm.matches("^[YNyn]$") || confirm.length() > 1) {
+                                System.out.println("Invalid input. Please try again");
+                                System.out.println("Are you sure you want to book this seat? (Y/N)");
+                                confirm = scanner.nextLine().toUpperCase();
+                            }
+                            confirmationAsked = true;
                             bookingHistory[studentId] = Arrays.toString(seatCodes) + " Hall C " + studentIdInput + " " + time;
-                            ++studentId;
-                            System.out.println("Seat booked successfully!");
-                        } else {
-                            System.out.println("Seat booking cancelled.");
-                            return false;
-                        }
 
+                            ++studentId;
+
+                            if (!confirm.equals("Y")) {
+                                System.out.println("Seat booking cancelled.");
+                                return false;
+                            }
+
+                        }
+                        eveningShift[row - 'A'][col] = eveningShift[row - 'A'][col].replace("AV", "BO");
                     }
                 } else {
                     System.out.println("Seat " + seatCode + " is not available or invalid.");
